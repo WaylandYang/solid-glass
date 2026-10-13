@@ -45,14 +45,12 @@ enough to get in the way of reading.
 
 ## The style
 
-- **Tactility.** Interfaces that feel tangible. Every interaction carries a subtle sense of touch
-  and response.
-- **Precision.** Clean geometry, refined details, and restrained lighting create a precise,
-  technical aesthetic.
-- **Physicality.** Depth comes from thickness, shadow, and spatial hierarchy, giving every element
-  a sense of physical presence.
-- **Materiality.** Subtle edge highlights, fine borders, and soft shadows define the character of
-  each surface.
+| | |
+|---|---|
+| **Tactility** | Interfaces that feel tangible. Every interaction carries a subtle sense of touch and response. |
+| **Precision** | Clean geometry, refined details, and restrained lighting create a precise, technical aesthetic. |
+| **Physicality** | Depth comes from thickness, shadow, and spatial hierarchy, giving every element a sense of physical presence. |
+| **Materiality** | Subtle edge highlights, fine borders, and soft shadows define the character of each surface. |
 
 ### Why it is built this way
 
