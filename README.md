@@ -45,40 +45,27 @@ enough to get in the way of reading.
 
 ## The style
 
-Solid Glass is glass with the transparency taken out of it. A pane is thick and smoke-grey and lets
-almost nothing through; what makes it glass is how it is finished at its edges. Four rules hold all
-of it together:
-
-| Rule | What it means |
-|---|---|
-| **The finish is at the edge** | A line of light along the top, a hairline all round, a shadow gathered underneath. Never a gradient or a highlight across the face. |
-| **Heavy, not airy** | Neutral grey. The blur softens what is behind a pane without boosting its colour, and a pane takes no colour from what it lies on. |
-| **Depth is thickness** | Panels are thinnest, cards in between, anything that floats is thickest, and thicker is more opaque. What is above what is read from the glass itself. |
-| **One state** | Hovered, chosen and held open all wear the same small pane of clear glass, in a sidebar, a menu and a tab alike. |
+- **Tactility.** Interfaces that feel tangible. Every interaction carries a subtle sense of touch
+  and response.
+- **Precision.** Clean geometry, refined details, and restrained lighting create a precise,
+  technical aesthetic.
+- **Physicality.** Depth comes from thickness, shadow, and spatial hierarchy, giving every element
+  a sense of physical presence.
+- **Materiality.** Subtle edge highlights, fine borders, and soft shadows define the character of
+  each surface.
 
 ### Why it is built this way
 
-An AI application is mostly text that arrives on its own schedule: answers streaming in, steps being
-taken, something waiting for a yes. People read it for hours. The material is chosen for that.
+AI applications are built around information that is constantly changing — responses streaming in,
+agents performing tasks, and decisions waiting for human input.
 
-- **Words stay readable, whatever is behind them.** A pane is nearly opaque and neutral, so text
-  always sits on an even surface. Nothing generated, scrolled or animated behind a pane can come
-  through it and compete with what is on it.
-- **Depth without colour.** Thicker is more opaque, so a menu or an approval that needs you is
-  plainly on top without being painted a different colour to say so.
-- **Colour is left free to mean something.** The glass has no hue of its own. A status dot, a
-  failing step, a series in a chart: when colour appears, it is saying something.
-- **One state to learn.** In a dense interface there is one answer to "which one?", wherever you
-  are looking.
-- **Motion is kept for work in progress.** The marks that move are the ones that say an agent is
-  thinking, searching, running or writing; when they stop, it is done or waiting for you.
-- **Finished at the edge, so it is cheap to draw.** A pane is a fill, a line of light, a hairline
-  and a shadow. No gradients across the face, no refraction, no canvas: ordinary CSS, which turns
-  fully opaque for anyone whose system asks for less transparency.
-- **Nothing to migrate.** It is one stylesheet over the shadcn/ui components you already have. They
-  stay as installed, in light and dark.
+Solid Glass keeps the interface calm and readable. Neutral surfaces reduce visual distractions,
+depth establishes hierarchy, and color and motion are reserved for meaningful feedback.
 
-The [Material](https://deeplethe.github.io/solid-glass/docs/material) page shows each rule at work,
+The entire system is built with lightweight CSS and works with existing shadcn/ui components in both
+light and dark modes.
+
+The [Material](https://deeplethe.github.io/solid-glass/docs/material) page shows how a pane is made,
 and the [Create](https://deeplethe.github.io/solid-glass/create) page lets you turn the dials.
 
 ## Install
