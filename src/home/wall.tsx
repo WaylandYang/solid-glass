@@ -25,12 +25,16 @@ import {
 import { Bar, BarChart, XAxis } from "recharts"
 
 import { cn } from "@/lib/utils"
+import { AskCard } from "@/components/ui/ask-card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { Checkbox } from "@/components/ui/checkbox"
+import { ContextRing } from "@/components/ui/context-ring"
+import { DiffStats, DiffView, patchStats } from "@/components/ui/diff-view"
+import { DotLoader } from "@/components/ui/dot-loader"
 import {
   Command,
   CommandEmpty,
@@ -58,6 +62,7 @@ import { Label } from "@/components/ui/label"
 import { Panel, PanelRow } from "@/components/ui/panel"
 import { Progress } from "@/components/ui/progress"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Reasoning } from "@/components/ui/reasoning"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
@@ -66,8 +71,11 @@ import { Switch } from "@/components/ui/switch"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tag } from "@/components/ui/tag"
+import { TaskNotice } from "@/components/ui/task-notice"
 import { Textarea } from "@/components/ui/textarea"
+import { StepGroup, type Step } from "@/components/ui/tool-steps"
 import { TurnStatus } from "@/components/ui/turn-status"
+import ComposerDemo from "@/examples/composer-demo"
 
 /*
  * The wall under the heading, laid out as on ui.shadcn.com: columns of cards that come in as the
@@ -306,7 +314,7 @@ function Storage() {
 /** A palette of things to go to and do: the thickest glass, with the lit row under the pointer. */
 function Palette() {
   return (
-    <Command className="rounded-lg bg-popover">
+    <Command className="h-auto shrink-0 rounded-lg bg-popover">
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
@@ -592,35 +600,152 @@ function Message() {
   )
 }
 
-export function Wall() {
+const PATCH = `@@ -12,7 +12,9 @@
+ def fetch(url):
+-    return requests.get(url)
++    response = requests.get(url, timeout=30)
++    response.raise_for_status()
++    return response
+`
+
+const STEPS: Step[] = [
+  { id: "search", label: "Searched the official docs", status: "done", detail: "request timeouts, official docs", detailLabel: "Query", output: "8 results" },
+  { id: "edit", label: "Edited research.py", status: "done", patch: PATCH },
+  { id: "run", label: "Ran python research.py", status: "running", detail: "python research.py", detailLabel: "Command" },
+]
+
+/** One turn of an agent: what it thought, what it did, and that it is still at it. */
+function Run() {
+  const [since] = React.useState(() => Date.now() - 41_000)
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Agent run</CardTitle>
+        <CardDescription>What it thought, what it did, and where it is now.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <Reasoning defaultOpen>
+          The fetch has no timeout, so one slow address holds up the whole list. Thirty seconds is what the docs suggest; a failure should be
+          raised, not passed on as an empty page.
+        </Reasoning>
+        <StepGroup steps={STEPS} />
+        <TurnStatus activity="running" label="Running the script" since={since} />
+      </CardContent>
+    </Card>
+  )
+}
+
+/** A question only the person can answer, put where the work stopped. */
+function Ask() {
+  const [answer, setAnswer] = React.useState<string | null>(null)
+  return (
+    <AskCard
+      question="19 samples time out in the solver at 30s. Raise the timeout to 120s and rerun, or leave them out and say so?"
+      options={["Raise to 120s and rerun", "Leave out and say so"]}
+      onAnswer={answer ? undefined : setAnswer}
+    />
+  )
+}
+
+/** A change, as the lines that went and the lines that came. */
+function Changes() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Changes</CardTitle>
+        <CardDescription className="flex items-center gap-2">
+          research.py <DiffStats {...patchStats(PATCH)} />
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <DiffView patch={PATCH} />
+      </CardContent>
+    </Card>
+  )
+}
+
+const CONTEXT = [
+  { key: "messages", label: "Messages", tokens: 61_400, tint: "bg-chart-1" },
+  { key: "tools", label: "Tools", tokens: 14_200, tint: "bg-chart-2" },
+  { key: "system", label: "System prompt", tokens: 6_800, tint: "bg-chart-3" },
+  { key: "skills", label: "Skills", tokens: 3_900, tint: "bg-chart-4" },
+]
+
+/** What runs behind the conversation, and how full the window is. */
+function Background() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>In the background</CardTitle>
+        <CardDescription>Tasks as they end, and the context they use.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <TaskNotice
+          notices={[
+            { id: "1", title: "“Background reading” finished", status: "completed", note: "ran 18s" },
+            { id: "2", title: "“Survey of sources” failed", status: "failed", note: "ran 17s" },
+            { id: "3", title: "You stopped “Rerun samples”", status: "stopped", note: "ran 2m 14s" },
+          ]}
+        />
+        <Separator />
+        <div className="flex items-center gap-5">
+          <ContextRing used={24_000} window={200_000} />
+          <ContextRing used={86_300} window={200_000} parts={CONTEXT} />
+          <ContextRing used={152_000} window={200_000} />
+          <ContextRing used={188_000} window={200_000} />
+          <span className="ml-auto flex items-center gap-2 text-[12.5px] text-muted-foreground">
+            Connecting <DotLoader />
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+/**
+ * The components, as a wall. On the home page it is cut off at a height and fades out; `full`
+ * shows all of it, and with it the parts made for agents — the run, the question, the composer,
+ * the change and what goes on in the background — each among the plainer things it sits beside.
+ */
+export function Wall({ full = false }: { full?: boolean }) {
   const column = "min-w-0 flex-col gap-(--gap)"
   return (
-    <div data-slot="demo" className="relative w-full overflow-hidden p-6 pb-0 [--gap:--spacing(6)] xl:[--gap:--spacing(7)]">
-      <div className="relative z-10 mx-auto grid max-h-[1240px] w-full grid-cols-[minmax(0,1fr)] gap-x-(--gap) md:max-w-3xl md:grid-cols-2 lg:max-w-none lg:grid-cols-3 min-[1400px]:grid-cols-4! xl:max-w-[1600px]">
+    <div data-slot="demo" className={cn("relative w-full overflow-hidden p-6 [--gap:--spacing(6)] xl:[--gap:--spacing(7)]", !full && "pb-0")}>
+      <div
+        className={cn(
+          "relative z-10 mx-auto grid w-full grid-cols-[minmax(0,1fr)] items-start gap-x-(--gap) md:max-w-3xl md:grid-cols-2 lg:max-w-none lg:grid-cols-3 min-[1400px]:grid-cols-4! xl:max-w-[1600px]",
+          !full && "max-h-[1240px]"
+        )}
+      >
         <div className={cn(column, "flex")}>
           <Elements />
+          {full && <Ask />}
           <Navigation />
           <Status />
           <Notifications />
         </div>
         <div className={cn(column, "hidden md:flex")}>
           <Activity />
+          {full && <Run />}
           <CreateProject />
           <Storage />
         </div>
         <div className={cn(column, "hidden lg:flex")}>
           <Palette />
+          {full && <ComposerDemo />}
           <Members />
           <Account />
           <Confirm />
         </div>
         <div className={cn(column, "hidden min-[1400px]:flex")}>
           <Message />
+          {full && <Changes />}
           <Invoices />
           <Files />
+          {full && <Background />}
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-48 bg-linear-to-t from-background via-background/80 to-transparent" />
+      {!full && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-48 bg-linear-to-t from-background via-background/80 to-transparent" />}
     </div>
   )
 }

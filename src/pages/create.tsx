@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Blocks from "@/create/blocks"
 import { Customizer } from "@/create/customizer"
-import { accent, CreateContext, decode, encode, fontFamily, overrides, shared, DEFAULTS, type Options } from "@/create/options"
+import { CreateContext, decode, encode, fontFamily, loadFont, overrides, shared, theme as themed, wash, DEFAULTS, type Options } from "@/create/options"
 import { Wall } from "@/home/wall"
 import { SolidGlassMark } from "@/site/logo"
 import { useTheme } from "@/site/theme"
@@ -43,8 +43,9 @@ function Welcome() {
         <DialogHeader className="p-4">
           <DialogTitle>Tune your own Solid Glass</DialogTitle>
           <DialogDescription>
-            Make the panes thinner or thicker, give the grey a tint, change the corners, the rim and the type. The preview is the
-            components as installed; the code at the end is only what you changed.
+            Start from a named look or from the stylesheet as it comes, then make the panes thinner or thicker, pick the grey and
+            the ink, the type, the corners, the rim and the shadow. The preview is the components as installed; the code at the
+            end is only what you changed.
           </DialogDescription>
         </DialogHeader>
         <div className="border-t p-4">
@@ -83,12 +84,19 @@ export default function Create() {
     )
   }
 
+  // a face that is not the site's own is fetched when a look first asks for it
+  React.useEffect(() => {
+    loadFont(options.font)
+    loadFont(options.heading)
+  }, [options.font, options.heading])
+
   const style = {
     ...shared(options),
     ...overrides(options, theme),
+    ...themed(options),
     fontFamily: fontFamily(options.font),
     "--create-heading": fontFamily(options.heading),
-    "--create-accent": accent(options, theme),
+    "--create-accent": wash(options, theme),
   } as React.CSSProperties
 
   return (
@@ -96,7 +104,7 @@ export default function Create() {
       <div className="container-wrapper flex h-[calc(100svh-var(--header-height))] min-h-0 flex-col gap-3 px-6 pb-6 md:flex-row md:gap-5">
         <Customizer options={options} onChange={change} mode={theme} onMode={setTheme} className="order-last md:order-first" />
         <div data-create-preview style={style} className="relative min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl border bg-background text-foreground">
-          <div className="no-scrollbar h-full overflow-y-auto">{view === "01" ? <Blocks /> : <div className="p-6"><Wall /></div>}</div>
+          <div className="no-scrollbar h-full overflow-y-auto">{view === "01" ? <Blocks /> : <Wall full />}</div>
           <div className="glass-panel absolute right-3 bottom-3 z-10 flex gap-0.5 rounded-lg p-0.5 font-mono text-xs">
             {VIEWS.map((name) => (
               <button

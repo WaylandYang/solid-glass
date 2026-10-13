@@ -492,6 +492,7 @@
 [data-slot="switch"][data-checked],
 [data-slot="checkbox"][data-checked],
 [data-slot="radio-group-item"][data-checked],
+[data-slot="questionnaire-choice"][data-checked] [data-slot="questionnaire-choice-indicator"],
 [class*="data-[active=true]:bg-sidebar-primary"][data-active="true"] {
   border-color: transparent;
   border-top-color: var(--primary-rim);
@@ -536,7 +537,7 @@
    utility (a group's squared inner corners, a size's own radius, a
    `rounded-full` passed in) working as written. */
 :is(
-  :is([data-slot="button"], .group\/button), [data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"],
+  :is([data-slot="button"], .group\/button), [data-slot="input"], [data-slot="questionnaire-input"], [data-slot="textarea"], [data-slot="select-trigger"],
   [data-slot="native-select"], [data-slot="input-group"], [data-slot="combobox-chips"],
   [data-slot="toggle"], [data-slot="toggle-group"], [data-slot="toggle-group-item"],
   [data-slot="button-group-text"], [data-slot="input-otp-group"]
@@ -552,6 +553,8 @@
    with a `data-slot` is left to say what it is. */
 :is(div, li, section):not([data-slot]).border[class*="rounded-"]:not([class*="bg-"]):not(.border-dashed),
 [data-slot="scroll-area"].border:not([class*="bg-"]),
+[data-slot="accordion"].border:not([class*="bg-"]),
+[data-slot="resizable-panel-group"].border:not([class*="bg-"]),
 [data-slot="calendar"].border {
   border-color: var(--glass-edge);
   background-color: var(--panel);
@@ -562,7 +565,8 @@
 /* A box with a quiet fill and nothing else — the placeholder a layout is
    sketched with, a well for a picture — is a pane too, the thinnest: its fill
    stays as written and it gains the hairline and the faint line of light. */
-:is(div, li, section):not([data-slot]):is(.bg-muted, .bg-muted\/50)[class*="rounded-"] {
+:is(div, li, section):not([data-slot]):is(.bg-muted, .bg-muted\/50)[class*="rounded-"],
+:is([data-slot="aspect-ratio"], [data-slot="attachment-media"], [data-slot="avatar-fallback"], [data-slot="avatar-group-count"]).bg-muted {
   box-shadow:
     inset 0 1px 0 var(--glass-inner),
     inset 0 0 0 1px var(--glass-edge);
@@ -884,6 +888,7 @@
    and it is where the line appears while the field is being typed into. */
 
 [data-slot="input"],
+[data-slot="questionnaire-input"],
 [data-slot="textarea"],
 [data-slot="select-trigger"],
 [data-slot="native-select"],
@@ -897,7 +902,7 @@
     inset 0 0 0 1px var(--field-edge),
     var(--tw-ring-shadow, 0 0 #0000);
 }
-:is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"], [data-slot="input-group"], [data-slot="combobox-chips"], [data-slot="sidebar-input"]):not([aria-invalid="true"]) {
+:is([data-slot="input"], [data-slot="questionnaire-input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"], [data-slot="input-group"], [data-slot="combobox-chips"], [data-slot="sidebar-input"]):not([aria-invalid="true"]) {
   border-color: transparent;
 }
 /* The cells of a one-time code share their borders, so on them the border is
@@ -910,7 +915,7 @@
 /* A field being typed into is drawn in a brighter line, and that is all.
    shadcn/ui's ring three pixels wide round it is too much light for a page
    this dark, and on one cell of a row of cells it is a frame round a frame. */
-:is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"], [data-slot="sidebar-input"]):focus-visible:not([aria-invalid="true"]),
+:is([data-slot="input"], [data-slot="questionnaire-input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"], [data-slot="sidebar-input"]):focus-visible:not([aria-invalid="true"]),
 [data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible):not(:has([aria-invalid="true"])),
 [data-slot="combobox-chips"]:focus-within {
   --tw-ring-shadow: 0 0 #0000;
@@ -935,6 +940,7 @@
 [data-slot="switch"]:not([data-checked]),
 [data-slot="checkbox"]:not([data-checked]),
 [data-slot="radio-group-item"]:not([data-checked]),
+[data-slot="questionnaire-choice"]:not([data-checked]) [data-slot="questionnaire-choice-indicator"],
 [class*="data-[active=true]:bg-sidebar-primary"]:not([data-active="true"]) {
   box-shadow:
     inset 0 1px 1.5px var(--well-shade),

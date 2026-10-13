@@ -5,12 +5,33 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { CHART_HUE, code, DEFAULTS, encode, fontFamily, KEYS, OPTIONS, shuffle, type Mode, type OptionKey, type Options } from "@/create/options"
+import { CHART_HUE, code, DEFAULTS, encode, fontFamily, GROUPS, loadFont, OPTIONS, packages, shuffle, styleOf, STYLES, TINT, type Mode, type OptionKey, type Options } from "@/create/options"
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { CodeBlock } from "@/site/code"
 
 /** What stands at the end of a picker's row, to show the choice without opening it. */
-function Sign({ option, value }: { option: OptionKey | "mode"; value: string }) {
+function Sign({ option, value }: { option: OptionKey | "mode" | "style"; value: string }) {
+  if (option === "style") {
+    // a look in small: its grey, and on it a dot of its ink
+    const look = { ...DEFAULTS, ...STYLES.find((style) => style.value === value)?.options }
+    const tint = TINT[look.tint].dark
+    const hue = CHART_HUE[look.accent]
+    return (
+      <span style={{ background: `oklch(0.42 ${tint.c * 2.5} ${tint.h})`, borderRadius: look.radius === "none" ? 0 : look.radius === "large" ? 6 : 4 }} className="flex size-4 shrink-0 items-center justify-center">
+        <span style={{ background: hue === undefined ? "oklch(0.96 0 0)" : `oklch(0.76 0.15 ${hue})` }} className="size-1.5 rounded-full" />
+      </span>
+    )
+  }
+  if (option === "density") {
+    const gap = { compact: 1.5, default: 2.5, roomy: 3.5 }[value] ?? 2.5
+    return (
+      <span style={{ gap }} className="flex w-4 flex-col">
+        {[0, 1, 2].map((line) => (
+          <span key={line} className="h-0.5 rounded-full bg-foreground/70" />
+        ))}
+      </span>
+    )
+  }
   if (option === "heading" || option === "font") {
     return (
       <span style={{ fontFamily: fontFamily(value) }} className="text-base leading-none">
@@ -22,18 +43,20 @@ function Sign({ option, value }: { option: OptionKey | "mode"; value: string }) 
     const corner = { none: "0", small: "3px", default: "6px", large: "9px" }[value] ?? "6px"
     return <span style={{ borderTopLeftRadius: corner }} className="size-4 border-t-2 border-l-2 border-foreground/70" />
   }
-  if (option === "chart") {
+  if (option === "chart" || option === "accent") {
     const hue = CHART_HUE[value]
-    return <span style={{ background: hue === undefined ? "var(--muted-foreground)" : `oklch(0.7 0.15 ${hue})` }} className="size-4 shrink-0 rounded-full" />
+    const plain = option === "accent" ? "var(--foreground)" : "var(--muted-foreground)"
+    return <span style={{ background: hue === undefined ? plain : `oklch(0.7 0.15 ${hue})` }} className="size-4 shrink-0 rounded-full" />
   }
   if (option === "tint") {
-    const tint = { neutral: "oklch(0.6 0 0)", cool: "oklch(0.6 0.05 262)", warm: "oklch(0.6 0.05 70)" }[value]
-    return <span style={{ background: tint }} className="size-4 shrink-0 rounded-full" />
+    // the grey is too nearly grey to tell one from the next at this size, so it is shown with its hue turned up
+    const tint = (TINT[value] ?? TINT.neutral).dark
+    return <span style={{ background: `oklch(0.6 ${tint.c * 4} ${tint.h})` }} className="size-4 shrink-0 rounded-full" />
   }
   if (option === "mode") {
     return <span className={cn("size-4 rounded-full border border-foreground/30", value === "dark" ? "bg-[oklch(0.2_0_0)]" : "bg-[oklch(0.95_0_0)]")} />
   }
-  // thickness, rim, blur: how far along its scale the choice is
+  // thickness, rim, shadow, blur: how far along its scale the choice is
   const choices = OPTIONS[option].choices
   const at = choices.findIndex((choice) => choice.value === value)
   return (
@@ -52,14 +75,17 @@ function Picker({
   choices,
   onChange,
 }: {
-  option: OptionKey | "mode"
+  option: OptionKey | "mode" | "style"
   label: string
   value: string
   choices: readonly { value: string; label: string }[]
   onChange: (value: string) => void
 }) {
+  const face = option === "heading" || option === "font"
+  const swatch = option === "chart" || option === "accent" || option === "tint" || option === "style"
   return (
-    <DropdownMenu>
+    // each face in the list is written in itself, so they are all wanted once the list is open
+    <DropdownMenu onOpenChange={(open) => open && face && loadFont("all")}>
       <DropdownMenuTrigger
         render={
           <button
@@ -70,7 +96,7 @@ function Picker({
       >
         <span className="flex min-w-0 flex-col gap-0.5">
           <span className="text-xs leading-none text-muted-foreground">{label}</span>
-          <span className="truncate text-sm leading-tight font-medium">{choices.find((choice) => choice.value === value)?.label}</span>
+          <span className="truncate text-sm leading-tight font-medium">{choices.find((choice) => choice.value === value)?.label ?? "Custom"}</span>
         </span>
         <span className="ml-auto flex shrink-0 items-center">
           <Sign option={option} value={value} />
@@ -81,8 +107,8 @@ function Picker({
           {choices.map((choice) => (
             <DropdownMenuRadioItem key={choice.value} value={choice.value}>
               {/* a colour is easier to pick by looking at it than by its name */}
-              {(option === "chart" || option === "tint") && <Sign option={option} value={choice.value} />}
-              <span style={option === "heading" || option === "font" ? { fontFamily: fontFamily(choice.value) } : undefined}>{choice.label}</span>
+              {swatch && <Sign option={option} value={choice.value} />}
+              <span style={face ? { fontFamily: fontFamily(choice.value) } : undefined}>{choice.label}</span>
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>
@@ -96,8 +122,7 @@ const MODES = [
   { value: "light", label: "Light" },
 ]
 
-// Where a line is drawn between one group of pickers and the next.
-const BREAK_AFTER: OptionKey[] = ["chart", "font"]
+const Rule = () => <span className="my-1 hidden h-px shrink-0 bg-border md:block" />
 
 /** The panel beside the preview: one picker per option, then what to do with the result. */
 export function Customizer({
@@ -117,6 +142,8 @@ export function Customizer({
   const preset = encode(options)
   const link = () => `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/create?preset=${preset}`
   const css = code(options)
+  const faces = packages(options)
+  const style = styleOf(options)
 
   return (
     <div data-slot="customizer" className={cn("glass-panel flex min-h-0 shrink-0 flex-col rounded-2xl md:w-48", className)}>
@@ -128,11 +155,19 @@ export function Customizer({
       </div>
       <div className="no-scrollbar flex min-h-0 flex-1 gap-1 overflow-x-auto p-2 md:flex-col md:overflow-x-visible md:overflow-y-auto">
         <Picker option="mode" label="Mode" value={mode} choices={MODES} onChange={(value) => onMode(value as Mode)} />
-        <span className="my-1 hidden h-px shrink-0 bg-border md:block" />
-        {KEYS.map((key) => (
-          <React.Fragment key={key}>
-            <Picker option={key} label={OPTIONS[key].label} value={options[key]} choices={OPTIONS[key].choices} onChange={(value) => onChange({ ...options, [key]: value })} />
-            {BREAK_AFTER.includes(key) && <span className="my-1 hidden h-px shrink-0 bg-border md:block" />}
+        <Picker
+          option="style"
+          label="Style"
+          value={style ?? ""}
+          choices={STYLES}
+          onChange={(value) => onChange({ ...DEFAULTS, ...STYLES.find((look) => look.value === value)?.options })}
+        />
+        {GROUPS.map((group) => (
+          <React.Fragment key={group[0]}>
+            <Rule />
+            {group.map((key) => (
+              <Picker key={key} option={key} label={OPTIONS[key].label} value={options[key]} choices={OPTIONS[key].choices} onChange={(value) => onChange({ ...options, [key]: value })} />
+            ))}
           </React.Fragment>
         ))}
       </div>
@@ -151,7 +186,8 @@ export function Customizer({
             <DialogHeader>
               <DialogTitle>Your Solid Glass</DialogTitle>
               <DialogDescription>
-                Add the stylesheet, then put this after it. It holds only what you tuned; everything else is the stylesheet as it comes.
+                Add the stylesheet{faces.length ? " and the faces" : ""}, then put this after it. It holds only what you tuned; everything else is
+                the stylesheet as it comes.
               </DialogDescription>
             </DialogHeader>
             <div className="flex min-w-0 flex-col gap-3">
@@ -160,7 +196,8 @@ export function Customizer({
                 lang="bash"
                 code={`npx shadcn@latest add ${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/r/solid-glass.json`}
               />
-              <CodeBlock className="my-0" lang="css" title="src/index.css" code={`@import "./solid-glass.css";\n\n${css}`} />
+              {faces.length > 0 && <CodeBlock className="my-0" lang="bash" code={`npm install ${faces.join(" ")}`} />}
+              <CodeBlock className="my-0 max-h-[46svh] overflow-y-auto" lang="css" title="src/index.css" code={`@import "./solid-glass.css";\n${css.startsWith("@import") ? "" : "\n"}${css}`} />
             </div>
           </DialogContent>
         </Dialog>
