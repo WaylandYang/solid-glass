@@ -23,15 +23,9 @@
 
 </div>
 
-**Form with substance.** A design system for AI applications, from agent workspaces to operator
-consoles: thick, smoky panes of glass that read as solid from a distance and as glass only close up. The finish is at the edges (a line of
-light along the top, a hairline all round, a shadow gathered underneath); the face is neutral grey,
-takes no colour from what is behind it, bends nothing and does not flow.
-
-**[deeplethe.github.io/solid-glass](https://deeplethe.github.io/solid-glass)** shows it at work: some
-seventy components in the material, among them a set made for interfaces where an agent works. On its
-[Create](https://deeplethe.github.io/solid-glass/create) page the glass can be tuned (thinner, thicker,
-tinted, another radius, another face) and the result copied out as a few lines of CSS.
+A refined glass-inspired aesthetic that feels solid from afar and reveals its subtle materiality up
+close. Delicate highlights, fine borders, and soft shadows create depth, while a restrained finish
+emphasizes clarity, stability, and a sense of solidity over transparency, refraction, and fluidity.
 
 [![An agent workspace made of it: sessions, the thread, files and background tasks](docs/screenshots/agent-workspace.webp)](https://deeplethe.github.io/solid-glass/blocks)
 
