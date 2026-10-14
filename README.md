@@ -77,10 +77,9 @@ Start from a shadcn/ui project (React 19, Tailwind CSS 4, the Base UI components
 npx shadcn@latest init
 ```
 
-Add the stylesheet, from the site or straight from this repository:
+Add the stylesheet, straight from this repository:
 
 ```bash
-npx shadcn@latest add https://deeplethe.github.io/solid-glass/r/solid-glass.json
 npx shadcn@latest add deeplethe/solid-glass/solid-glass
 ```
 
@@ -100,7 +99,7 @@ Dark is the material as designed; light is there too. The
 Solid Glass's own components install the same way:
 
 ```bash
-npx shadcn@latest add https://deeplethe.github.io/solid-glass/r/status-glyph.json
+npx shadcn@latest add deeplethe/solid-glass/status-glyph
 ```
 
 | Component | What it is |

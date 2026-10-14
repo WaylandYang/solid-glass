@@ -182,7 +182,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "https://deeplethe.github.io/solid-glass/r/diff-view.json"
+        "deeplethe/solid-glass/diff-view"
       ],
       "files": [
         {
@@ -200,7 +200,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "https://deeplethe.github.io/solid-glass/r/status-glyph.json"
+        "deeplethe/solid-glass/status-glyph"
       ],
       "files": [
         {
@@ -219,13 +219,13 @@
       ],
       "registryDependencies": [
         "button",
-        "https://deeplethe.github.io/solid-glass/r/ask-card.json",
-        "https://deeplethe.github.io/solid-glass/r/composer.json",
-        "https://deeplethe.github.io/solid-glass/r/context-ring.json",
-        "https://deeplethe.github.io/solid-glass/r/panel.json",
-        "https://deeplethe.github.io/solid-glass/r/tag.json",
-        "https://deeplethe.github.io/solid-glass/r/tool-steps.json",
-        "https://deeplethe.github.io/solid-glass/r/turn-status.json",
+        "deeplethe/solid-glass/ask-card",
+        "deeplethe/solid-glass/composer",
+        "deeplethe/solid-glass/context-ring",
+        "deeplethe/solid-glass/panel",
+        "deeplethe/solid-glass/tag",
+        "deeplethe/solid-glass/tool-steps",
+        "deeplethe/solid-glass/turn-status",
         "kbd"
       ],
       "files": [

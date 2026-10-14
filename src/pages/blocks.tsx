@@ -33,7 +33,7 @@ function BlockViewer({ block }: { block: Block }) {
   const frame = `${theme}-${round}`
   const [drawn, setDrawn] = React.useState("")
   // Solid Glass's own come from its registry; shadcn/ui's from shadcn/ui, and take the material from the stylesheet.
-  const command = block.own ? `npx shadcn@latest add ${window.location.origin}${base}/r/${block.name}.json` : `npx shadcn@latest add ${block.name}`
+  const command = block.own ? `npx shadcn@latest add deeplethe/solid-glass/${block.name}` : `npx shadcn@latest add ${block.name}`
   // The frame is a window of its own: it is told the theme, and loaded again when the theme changes.
   const address = `${base}/view/${block.name}?theme=${theme}`
 

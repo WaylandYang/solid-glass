@@ -14,11 +14,13 @@ npx shadcn@latest init
 
 ## Add the stylesheet
 
-The whole material is one file. Put it beside your own styles:
+The whole material is one file. Put it beside your own styles; the command reads it straight from the [GitHub repository](https://github.com/deeplethe/solid-glass):
 
 ```bash
-npx shadcn@latest add {origin}/r/solid-glass.json
+npx shadcn@latest add deeplethe/solid-glass/solid-glass
 ```
+
+Add `#` and a tag or a commit to pin a version, as in `deeplethe/solid-glass/solid-glass#<commit>`. The same items are also served from this site, at `{origin}/r/<item>.json`, for a command line too old to read from GitHub.
 
 Then import it after Tailwind and shadcn's stylesheet, and delete the `:root` and `.dark` colour variables that `shadcn init` wrote. Solid Glass defines the same names.
 
@@ -51,10 +53,10 @@ Stock components are installed the usual way, from shadcn/ui:
 npx shadcn@latest add button
 ```
 
-Solid Glass's own components are installed with the same command, from this site:
+Solid Glass's own components are installed with the same command, from the repository:
 
 ```bash
-npx shadcn@latest add {origin}/r/status-glyph.json
+npx shadcn@latest add deeplethe/solid-glass/status-glyph
 ```
 
 ## Fonts

@@ -194,7 +194,7 @@ export function Customizer({
               <CodeBlock
                 className="my-0"
                 lang="bash"
-                code={`npx shadcn@latest add ${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}/r/solid-glass.json`}
+                code="npx shadcn@latest add deeplethe/solid-glass/solid-glass"
               />
               {faces.length > 0 && <CodeBlock className="my-0" lang="bash" code={`npm install ${faces.join(" ")}`} />}
               <CodeBlock className="my-0 max-h-[46svh] overflow-y-auto" lang="css" title="src/index.css" code={`@import "./solid-glass.css";\n${css.startsWith("@import") ? "" : "\n"}${css}`} />
