@@ -703,9 +703,9 @@ function Background() {
 }
 
 /**
- * The components, as a wall. On the home page it is cut off at a height and fades out; `full`
- * shows all of it, and with it the parts made for agents — the run, the question, the composer,
- * the change and what goes on in the background — each among the plainer things it sits beside.
+ * The components, as a wall: the parts made for agents — the run, the question, the composer, the
+ * change and what goes on in the background — each among the plainer things it sits beside. On
+ * the home page it is cut off at a height and fades out; `full` shows all of it.
  */
 export function Wall({ full = false }: { full?: boolean }) {
   const column = "min-w-0 flex-col gap-(--gap)"
@@ -719,30 +719,30 @@ export function Wall({ full = false }: { full?: boolean }) {
       >
         <div className={cn(column, "flex")}>
           <Elements />
-          {full && <Ask />}
+          <Ask />
           <Navigation />
           <Status />
           <Notifications />
         </div>
         <div className={cn(column, "hidden md:flex")}>
           <Activity />
-          {full && <Run />}
+          <Run />
           <CreateProject />
           <Storage />
         </div>
         <div className={cn(column, "hidden lg:flex")}>
           <Palette />
-          {full && <ComposerDemo />}
+          <ComposerDemo />
           <Members />
           <Account />
           <Confirm />
         </div>
         <div className={cn(column, "hidden min-[1400px]:flex")}>
           <Message />
-          {full && <Changes />}
+          <Changes />
           <Invoices />
           <Files />
-          {full && <Background />}
+          <Background />
         </div>
       </div>
       {!full && <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-48 bg-linear-to-t from-background via-background/80 to-transparent" />}

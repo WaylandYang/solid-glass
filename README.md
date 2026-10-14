@@ -32,9 +32,9 @@ emphasizes clarity, stability, and a sense of solidity over transparency, refrac
 That is one of the [blocks](https://deeplethe.github.io/solid-glass/blocks): whole screens made of the
 components, to look at, read and copy in. Below, the components themselves.
 
-![The components in the dark theme](docs/screenshots/home-dark.webp)
+![The components in the dark theme](docs/screenshots/home-dark-2.webp)
 
-![The components in the light theme](docs/screenshots/home-light.webp)
+![The components in the light theme](docs/screenshots/home-light-2.webp)
 
 It stands between flat design and liquid glass. Flat is an opaque block with no finish to speak of;
 liquid glass is nearly clear, and on a page with a lot of text the reader is always fighting the
