@@ -1049,10 +1049,31 @@
     inset 0 0 0 1px oklch(0 0 0 / 8%);
 }
 
+/* A tick in a disc of ink — the mark beside each line of a list of what is
+   included — is a checked box made round: the pane is the icon's own box,
+   rounded off, with the box's line of light, its shade along the bottom and a
+   hairline of the ink's own colour. The disc and the ring the icon draws are
+   put out, so the tick sits on the pane. */
+svg.fill-primary:has(> circle) {
+  border-radius: 9999px;
+  background-color: color-mix(in oklch, var(--primary) var(--primary-solid), transparent);
+  box-shadow:
+    inset 0 1px 0 var(--primary-rim),
+    inset 0 -1px 0 color-mix(in oklch, var(--primary-under) 45%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, var(--primary) 55%, var(--primary-edge)),
+    0 1px 2px var(--glass-contact);
+}
+svg.fill-primary:has(> circle) > circle {
+  fill: none;
+  stroke: none;
+}
+
 /* What a chart says under the pointer floats over it: the thickest glass, like
    any other popover, and with a control's corners rather than a pill's. */
 .recharts-tooltip-wrapper > .bg-background {
-  border-color: transparent;
+  /* No border: the hairline is outside the edge and the shade inside it, and
+     a see-through border between them doubled the line along the foot. */
+  border-width: 0;
   border-radius: var(--radius-md);
   background-color: var(--popover);
   -webkit-backdrop-filter: var(--glass-blur);
