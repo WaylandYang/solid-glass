@@ -237,13 +237,23 @@ const SHADOW: Record<string, number> = { none: 0, soft: 0.5, deep: 1.7 }
 
 const DENSITY: Record<string, string> = { compact: "0.225rem", roomy: "0.28rem" }
 
-// Ink of a colour. On a dark page ink is light and what is written on it dark; on a light page the
-// other way about, except for the hues that are only themselves when they are bright.
+// Ink of a colour: a mid-tone with white written on it, in either theme, except for the hues that
+// are only themselves when they are bright, which carry dark writing. (Light ink with dark writing
+// is how the dark theme's own ink works, but a colour made that light turns to a pastel.)
 const BRIGHT = new Set(["amber", "yellow", "lime"])
 function ink(hue: string, mode: Mode) {
   const h = CHART_HUE[hue]
-  if (mode === "dark") return { fill: `oklch(0.76 0.15 ${h})`, on: "oklch(0.18 0.02 " + h + ")" }
-  return BRIGHT.has(hue) ? { fill: `oklch(0.84 0.17 ${h})`, on: `oklch(0.26 0.05 ${h})` } : { fill: `oklch(0.54 0.2 ${h})`, on: "oklch(0.985 0 0)" }
+  if (BRIGHT.has(hue)) return { fill: `oklch(${mode === "dark" ? 0.8 : 0.79} 0.17 ${h})`, on: `oklch(0.24 0.05 ${h})` }
+  return { fill: `oklch(${mode === "dark" ? 0.62 : 0.54} ${mode === "dark" ? 0.19 : 0.2} ${h})`, on: "oklch(0.985 0 0)" }
+}
+
+// The dark theme finishes its ink as the light pane it is: a full line of light on top and a pale
+// hairline. Ink of a colour is a mid-tone, and is finished as the light theme finishes its own.
+const COLOURED_INK_DARK: Record<string, string> = {
+  "--primary-rim": "oklch(1 0 0 / 30%)",
+  "--primary-under": "oklch(0 0 0 / 40%)",
+  "--primary-inner": "oklch(1 0 0 / 7%)",
+  "--primary-edge": "oklch(0.2 0 0 / 30%)",
 }
 
 // Fill and how much of it: the pane's lightness, then its opacity at each thickness.
@@ -326,6 +336,7 @@ export function overrides(options: Options, mode: Mode): Record<string, string> 
     vars["--primary-foreground"] = on
     vars["--sidebar-primary"] = fill
     vars["--sidebar-primary-foreground"] = on
+    if (mode === "dark") Object.assign(vars, COLOURED_INK_DARK)
   }
 
   if (options.shadow !== "default") {
