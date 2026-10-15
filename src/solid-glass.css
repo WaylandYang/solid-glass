@@ -132,6 +132,10 @@
   --glass-rim: oklch(1 0 0 / 90%);
   --glass-inner: oklch(1 0 0 / 35%);
   --glass-edge: oklch(0.38 0.03 265 / 10%);
+  /* The thickest pane, nearly white on a pale page, would lose its edge in
+     the light: it keeps it by a firmer hairline and a shade along its foot. */
+  --popover-edge: oklch(0.38 0.03 265 / 22%);
+  --popover-under: oklch(0.38 0.03 265 / 16%);
   --glass-shade: oklch(0.3 0.06 265 / 28%);
   --glass-contact: oklch(0.25 0.03 265 / 6%);
   --glass-lift: oklch(0.25 0.03 265 / 14%);
@@ -254,6 +258,8 @@
   --glass-rim: oklch(1 0 0 / 16%);
   --glass-inner: oklch(1 0 0 / 4%);
   --glass-edge: oklch(1 0 0 / 6%);
+  --popover-edge: var(--glass-edge);
+  --popover-under: oklch(0 0 0 / 0%);
   --glass-shade: oklch(0 0 0 / 60%);
   --glass-contact: oklch(0 0 0 / 10%);
   --glass-lift: oklch(0 0 0 / 22%);
@@ -389,7 +395,8 @@
   border-width: 0;
   box-shadow:
     inset 0 1px 0 var(--glass-rim),
-    0 0 0 1px var(--glass-edge),
+    inset 0 -1px 0 var(--popover-under),
+    0 0 0 1px var(--popover-edge),
     0 24px 60px -18px var(--glass-shade),
     0 6px 16px -6px var(--glass-lift);
 }
@@ -447,7 +454,9 @@
 }
 :is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):not(:focus-visible),
 .glass-primary:not(:focus-visible) {
-  border-color: var(--primary-edge);
+  /* The hairline is the ink's own colour, toned toward the edge's: a grey
+     one round ink of a colour would read as an outline drawn round it. */
+  border-color: color-mix(in oklch, var(--primary) 55%, var(--primary-edge));
 }
 /* Pressed, it sits down on the page: the shadow under it goes. */
 :is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):active,
@@ -849,7 +858,8 @@
   backdrop-filter: var(--glass-blur);
   box-shadow:
     inset 0 1px 0 var(--glass-rim),
-    0 0 0 1px var(--glass-edge),
+    inset 0 -1px 0 var(--popover-under),
+    0 0 0 1px var(--popover-edge),
     0 24px 60px -18px var(--glass-shade),
     0 6px 16px -6px var(--glass-lift);
 }
@@ -1033,7 +1043,8 @@
   backdrop-filter: var(--glass-blur);
   box-shadow:
     inset 0 1px 0 var(--glass-rim),
-    0 0 0 1px var(--glass-edge),
+    inset 0 -1px 0 var(--popover-under),
+    0 0 0 1px var(--popover-edge),
     0 24px 60px -18px var(--glass-shade),
     0 6px 16px -6px var(--glass-lift);
 }
