@@ -237,14 +237,36 @@ const SHADOW: Record<string, number> = { none: 0, soft: 0.5, deep: 1.7 }
 
 const DENSITY: Record<string, string> = { compact: "0.225rem", roomy: "0.28rem" }
 
-// Ink of a colour: a mid-tone with white written on it, in either theme, except for the hues that
-// are only themselves when they are bright, which carry dark writing. (Light ink with dark writing
-// is how the dark theme's own ink works, but a colour made that light turns to a pastel.)
-const BRIGHT = new Set(["amber", "yellow", "lime"])
+// Ink of a colour, per hue and theme: lightness, chroma, and whether white or dark is written on it.
+// White needs the fill dark enough to be read at 4.5:1 or better once the pane lets the page through,
+// and the hues near green are brighter at the same lightness, so each is set on its own; chroma is
+// as much as the screen can show at that lightness, so the hue does not shift when it is clipped.
+// Amber, yellow and lime are only themselves when they are bright, and carry dark writing; so does
+// orange on a light page, where white would need it so dark it turns to rust.
+type Ink = [l: number, c: number, on: "white" | "dark"]
+const INK: Record<string, Record<Mode, Ink>> = {
+  red: { light: [0.54, 0.2, "white"], dark: [0.62, 0.19, "white"] },
+  orange: { light: [0.72, 0.19, "dark"], dark: [0.62, 0.16, "white"] },
+  amber: { light: [0.79, 0.165, "dark"], dark: [0.8, 0.165, "dark"] },
+  yellow: { light: [0.79, 0.16, "dark"], dark: [0.8, 0.165, "dark"] },
+  lime: { light: [0.79, 0.17, "dark"], dark: [0.8, 0.17, "dark"] },
+  green: { light: [0.48, 0.13, "white"], dark: [0.58, 0.155, "white"] },
+  emerald: { light: [0.48, 0.1, "white"], dark: [0.59, 0.125, "white"] },
+  teal: { light: [0.49, 0.085, "white"], dark: [0.59, 0.105, "white"] },
+  cyan: { light: [0.49, 0.085, "white"], dark: [0.59, 0.1, "white"] },
+  sky: { light: [0.49, 0.1, "white"], dark: [0.6, 0.125, "white"] },
+  blue: { light: [0.5, 0.16, "white"], dark: [0.61, 0.19, "white"] },
+  indigo: { light: [0.51, 0.2, "white"], dark: [0.61, 0.19, "white"] },
+  violet: { light: [0.52, 0.2, "white"], dark: [0.62, 0.19, "white"] },
+  purple: { light: [0.52, 0.2, "white"], dark: [0.62, 0.19, "white"] },
+  fuchsia: { light: [0.53, 0.2, "white"], dark: [0.62, 0.19, "white"] },
+  pink: { light: [0.54, 0.2, "white"], dark: [0.62, 0.19, "white"] },
+  rose: { light: [0.54, 0.2, "white"], dark: [0.62, 0.19, "white"] },
+}
 function ink(hue: string, mode: Mode) {
   const h = CHART_HUE[hue]
-  if (BRIGHT.has(hue)) return { fill: `oklch(${mode === "dark" ? 0.8 : 0.79} 0.17 ${h})`, on: `oklch(0.24 0.05 ${h})` }
-  return { fill: `oklch(${mode === "dark" ? 0.62 : 0.54} ${mode === "dark" ? 0.19 : 0.2} ${h})`, on: "oklch(0.985 0 0)" }
+  const [l, c, on] = INK[hue][mode]
+  return { fill: `oklch(${l} ${c} ${h})`, on: on === "white" ? "oklch(0.985 0 0)" : `oklch(0.24 0.05 ${h})` }
 }
 
 // The dark theme finishes its ink as the light pane it is: a full line of light on top and a pale
