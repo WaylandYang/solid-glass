@@ -12,7 +12,7 @@ import { SolidGlassMark } from "@/site/logo"
  * a thin dark edge underneath and its shadow on the page. No gradient; like a pane, a letter is
  * finished at its edges.
  */
-function GlassWordmark({ first, second }: { first: string; second: string }) {
+export function GlassWordmark({ first, second, scale = 1 }: { first: string; second: string; scale?: number }) {
   const id = React.useId()
   // Every layer is the same line of type. Only the face is told the two words apart.
   const letters = (props: React.SVGProps<SVGTextElement>, face?: [string, string]) => (
@@ -22,7 +22,7 @@ function GlassWordmark({ first, second }: { first: string; second: string }) {
     </text>
   )
   return (
-    <svg width="222" height="48" viewBox="0 0 222 48" role="img" aria-label={`${first} ${second}`} className="overflow-visible font-sans">
+    <svg width={222 * scale} height={48 * scale} viewBox="0 0 222 48" role="img" aria-label={`${first} ${second}`} className="overflow-visible font-sans">
       <defs>
         {/* What is left of the letters once the same letters, moved down a little, are taken out: their top edges. */}
         <mask id={`${id}rim`} maskUnits="userSpaceOnUse" x="-8" y="-8" width="240" height="64">
@@ -55,7 +55,7 @@ function GlassWordmark({ first, second }: { first: string; second: string }) {
 // here, that tint alone would turn clear and take the light's colour, which is liquid glass's look.
 // So the page a pane lies on is put back under it: the page's colour, mostly opaque, beneath the
 // tint. The light then shows round a pane and along its edges, not through its face.
-const over = (tint: string): React.CSSProperties => ({
+export const over = (tint: string): React.CSSProperties => ({
   background: `linear-gradient(${tint}, ${tint}), color-mix(in oklch, var(--background) 90%, transparent)`,
 })
 

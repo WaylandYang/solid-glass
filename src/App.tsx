@@ -6,6 +6,7 @@ import { Toaster as ToastToaster } from "@/components/ui/toast"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Home } from "@/pages/home"
 import { DevBanner } from "@/pages/dev-banner"
+import { DevPromo } from "@/pages/dev-promo"
 import { DevExamples } from "@/pages/dev-examples"
 import { ComponentsIndex, DocPage, DocsLayout } from "@/site/docs"
 import { SiteFooter } from "@/site/site-footer"
@@ -30,6 +31,8 @@ export function App() {
   const { pathname } = useLocation()
   // The README's banner is a picture of the material and nothing else: no header, no footer behind it.
   if (import.meta.env.DEV && pathname === "/dev/banner") return <DevBanner />
+  // The promotional film, played by the material itself (and recorded by scripts/record.mjs).
+  if (import.meta.env.DEV && pathname === "/dev/promo") return <DevPromo />
   // A block by itself, in a window of its own: no header, no footer round it.
   if (pathname.startsWith("/view/")) {
     return (
