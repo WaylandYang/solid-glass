@@ -634,8 +634,9 @@
    border — a group of buttons joins them by it — so the border is the
    hairline, one colour all the way round, and the line of light is drawn just
    inside it. (Lighting the border's own top side breaks at the corners, where
-   a white top meets a grey side.) Secondary has no border to show, and draws
-   both inside its edge. */
+   a white top meets a grey side.) Secondary is drawn the same way in a
+   fainter hairline: its border is see-through and its fill stops short of it,
+   so a line drawn inside left the page showing round it as a second edge. */
 :is([data-slot="button"], .group\/button):is([data-variant="outline"], .bg-background),
 :is([data-slot="button"], .group\/button):is([data-variant="secondary"], .bg-secondary) {
   background-color: var(--glass-control);
@@ -653,17 +654,29 @@
   border-color: var(--border);
 }
 :is([data-slot="button"], .group\/button):is([data-variant="secondary"], .bg-secondary) {
+  background-clip: padding-box;
   box-shadow:
     inset 0 1px 0 var(--glass-control-rim),
-    inset 0 0 0 1px var(--glass-edge),
     0 1px 2px var(--glass-contact),
     var(--tw-ring-shadow, 0 0 #0000);
+}
+:is([data-slot="button"], .group\/button):is([data-variant="secondary"], .bg-secondary):not(:focus-visible):not([aria-invalid="true"]) {
+  border-color: var(--glass-edge);
 }
 :is([data-slot="button"], .group\/button):is([data-variant="outline"], [data-variant="secondary"], .bg-background, .bg-secondary):is(:hover, [aria-expanded="true"], [data-popup-open], [data-pressed]) {
   background-color: color-mix(in oklch, var(--foreground) 12%, transparent);
 }
-/* Glass tinted the colour of failure. */
-:is([data-slot="button"], .group\/button):is([data-variant="destructive"], .bg-destructive\/10),
+/* Glass tinted the colour of failure. A button's hairline is its border, as
+   above; a bubble has none, and draws it inside. */
+:is([data-slot="button"], .group\/button):is([data-variant="destructive"], .bg-destructive\/10) {
+  background-clip: padding-box;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--destructive) 30%, transparent),
+    var(--tw-ring-shadow, 0 0 #0000);
+}
+:is([data-slot="button"], .group\/button):is([data-variant="destructive"], .bg-destructive\/10):not(:focus-visible) {
+  border-color: color-mix(in oklch, var(--destructive) 16%, transparent);
+}
 [data-slot="bubble"][data-variant="destructive"] > [data-slot="bubble-content"] {
   box-shadow:
     inset 0 1px 0 color-mix(in oklch, var(--destructive) 30%, transparent),
@@ -896,8 +909,10 @@
    at each corner with a visible break, and the whole reads as a box drawn in
    outline, not as glass.)
 
-   The border it was given is kept but not seen. It keeps the field its size,
-   and it is where the line appears while the field is being typed into. */
+   The hairline is the border it was given, one colour all the way round, so
+   it sits on the field's outer edge: drawn inside a border left see-through,
+   it showed the page as a second ring round the field. The border is also
+   where the brighter line appears while the field is being typed into. */
 
 [data-slot="input"],
 [data-slot="questionnaire-input"],
@@ -911,11 +926,10 @@
   background-clip: padding-box;
   box-shadow:
     inset 0 1px 0 var(--field-rim),
-    inset 0 0 0 1px var(--field-edge),
     var(--tw-ring-shadow, 0 0 #0000);
 }
 :is([data-slot="input"], [data-slot="questionnaire-input"], [data-slot="textarea"], [data-slot="select-trigger"], [data-slot="native-select"], [data-slot="input-group"], [data-slot="combobox-chips"], [data-slot="sidebar-input"]):not([aria-invalid="true"]) {
-  border-color: transparent;
+  border-color: var(--field-edge);
 }
 /* The cells of a one-time code share their borders, so on them the border is
    the hairline, one colour all round. */
