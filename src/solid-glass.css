@@ -455,8 +455,10 @@
 :is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):not(:focus-visible),
 .glass-primary:not(:focus-visible) {
   /* The hairline is the ink's own colour, toned toward the edge's: a grey
-     one round ink of a colour would read as an outline drawn round it. */
-  border-color: color-mix(in oklch, var(--primary) 55%, var(--primary-edge));
+     one round ink of a colour would read as an outline drawn round it. Mixed
+     in oklab, which has no hue to turn: in oklch the grey's hue of 0 is
+     travelled toward, and green comes out brown. */
+  border-color: color-mix(in oklab, var(--primary) 55%, var(--primary-edge));
 }
 /* Pressed, it sits down on the page: the shadow under it goes. */
 :is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):active,
