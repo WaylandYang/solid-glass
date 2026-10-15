@@ -1034,19 +1034,19 @@
     inset 0 0 0 1px var(--mark-edge);
 }
 /* A badge in a chart's colour has words on it, so its fill stays nearly
-   whole. It is finished like the primary button, the other small pane with a
-   strong fill: lit along the top, shaded along the bottom, a dark hairline
-   round it (a light fill has no use for a light one) and a shadow under it. */
+   whole. It is a label, not a control, and is finished as the other badges
+   are: lit along the top, a faint shade along the bottom and a faint dark
+   hairline round it (a light fill has no use for a light one). It stands on
+   nothing: with the primary button's full bevel and a shadow under it, it
+   read as a button to press. */
 [data-slot="badge"]:is(.bg-chart-1, .bg-chart-2, .bg-chart-3, .bg-chart-4, .bg-chart-5) {
   background-color: color-mix(in oklch, var(--mark) 90%, transparent);
   -webkit-backdrop-filter: var(--glass-blur-control);
   backdrop-filter: var(--glass-blur-control);
   box-shadow:
-    inset 0 1px 0 oklch(1 0 0 / 70%),
-    inset 0 -1px 0 oklch(0 0 0 / 34%),
-    inset 0 0 0 1px oklch(0 0 0 / 14%),
-    0 1px 2px var(--glass-contact),
-    0 2px 6px -2px var(--glass-shade);
+    inset 0 1px 0 oklch(1 0 0 / 55%),
+    inset 0 -1px 0 oklch(0 0 0 / 10%),
+    inset 0 0 0 1px oklch(0 0 0 / 8%);
 }
 
 /* What a chart says under the pointer floats over it: the thickest glass, like
