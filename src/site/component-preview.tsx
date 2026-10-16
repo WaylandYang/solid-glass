@@ -42,9 +42,6 @@ function useSource(load: (() => Promise<string>) | undefined) {
   return text
 }
 
-/** As it would be written in a project: the site's own paths become the ones shadcn installs to. */
-const asInstalled = (code: string) => code.replace(/^"use client"\n\n?/, "")
-
 /**
  * A component shown live over its code, as on ui.shadcn.com: the preview on top, and under it the
  * first lines of the source, fading out, with a button that shows the rest.
@@ -67,7 +64,7 @@ export function ComponentPreview({
   const Example = exampleOf(name)
   const source = useSource(sources[`/src/examples/${name}.tsx`])
   const [open, setOpen] = React.useState(false)
-  const code = source ? asInstalled(source) : ""
+  const code = source ?? ""
 
   return (
     <div data-slot="component-preview" className={cn("group relative mt-4 mb-12 flex flex-col overflow-hidden rounded-2xl border", wrapperClassName)}>

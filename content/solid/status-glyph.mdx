@@ -43,6 +43,8 @@ There are five kinds of work, and a way of moving for each. The points are alway
 
 A state that lasts minutes is not minutes of one motion: an activity takes several figures in turn, holding each for a few seconds and then turning into the next. `STATUS_FIGURES` lists every figure on its own, and the `figure` prop plays just one.
 
+In a React Server Components project, the default glyph can be rendered from a server page. A `figure` is a function, so choose from `STATUS_FIGURES` or define a custom figure inside a `"use client"` component, then pass it to `StatusGlyph` there. The same applies to the `figure` prop on `TurnStatus`.
+
 <ComponentPreview name="status-glyph-figures" previewClassName="h-96" />
 
 ## Inline
