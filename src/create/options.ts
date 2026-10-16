@@ -304,9 +304,13 @@ export const CHART_HUE: Record<string, number> = {
   pink: 350,
   rose: 12,
 }
-const CHART_LIGHT: Record<Mode, number[]> = { dark: [0.94, 0.83, 0.69, 0.56, 0.44], light: [0.8, 0.66, 0.54, 0.44, 0.34] }
+// On a dark page the first step is the brightest and so the clearest; on a light one the lightest
+// would be the faintest, and the first is what most charts lead with. So the light steps start at
+// a mid-tone that still reads on a card, keep their widest step between the first two (the pair
+// most charts set side by side), and close up towards the darkest.
+const CHART_LIGHT: Record<Mode, number[]> = { dark: [0.94, 0.83, 0.69, 0.56, 0.44], light: [0.7, 0.55, 0.46, 0.38, 0.31] }
 // How much colour each step carries: a light page needs more of it than a dark one to read as the hue.
-const CHART_CHROMA: Record<Mode, number[]> = { dark: [0.07, 0.13, 0.15, 0.13, 0.1], light: [0.11, 0.16, 0.17, 0.15, 0.12] }
+const CHART_CHROMA: Record<Mode, number[]> = { dark: [0.07, 0.13, 0.15, 0.13, 0.1], light: [0.15, 0.18, 0.16, 0.14, 0.12] }
 
 const RADIUS: Record<string, [string, string]> = { none: ["0rem", "0rem"], small: ["0.5rem", "0.4rem"], large: ["1.125rem", "0.9rem"] }
 const RIM: Record<string, Record<Mode, [number, number]>> = {

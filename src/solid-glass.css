@@ -207,12 +207,14 @@
   --syn-number: oklch(0.55 0.14 60);
   --syn-name: oklch(0.47 0.15 310);
 
-  /* Charts are drawn in greys, like the rest: no hue of their own. */
-  --chart-1: oklch(0.8 0 0);
-  --chart-2: oklch(0.62 0 0);
-  --chart-3: oklch(0.5 0 0);
-  --chart-4: oklch(0.4 0 0);
-  --chart-5: oklch(0.29 0 0);
+  /* Charts are drawn in greys, like the rest: no hue of their own. The first is the one most
+     charts lead with and the second is what it is set against, so the first is a mid-tone that
+     still reads on a card and the widest step is between those two; the rest close up from there. */
+  --chart-1: oklch(0.7 0 0);
+  --chart-2: oklch(0.54 0 0);
+  --chart-3: oklch(0.44 0 0);
+  --chart-4: oklch(0.35 0 0);
+  --chart-5: oklch(0.27 0 0);
 
   --sidebar: oklch(0.975 0.004 265 / 44%);
   --sidebar-foreground: oklch(0.25 0 0);
