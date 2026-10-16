@@ -1165,14 +1165,35 @@ svg.fill-primary:has(> circle) > circle {
 /* Without the blur, for a reader whose system asks for less transparency or a
    part of the page marked data-glass="opaque". The panes turn opaque and keep
    their rim and shadow, which is most of what they were. */
+[data-glass="opaque"],
+[data-glass="opaque"] .dark {
+  --primary-solid: 100%;
+  --glass-blur: none;
+  --glass-blur-control: none;
+  --panel: oklch(0.947 0.006 265);
+  --card: oklch(0.958 0.005 265);
+  --popover: oklch(0.98 0.003 265);
+  --sidebar: oklch(0.985 0 0);
+}
+.dark[data-glass="opaque"],
+.dark [data-glass="opaque"],
+[data-glass="opaque"] .dark {
+  --panel: oklch(0.19 0 0);
+  --card: oklch(0.225 0 0);
+  --popover: oklch(0.22 0 0);
+  --sidebar: oklch(0.13 0 0);
+}
 [data-glass="opaque"] :is(.bg-card, .bg-popover, .bg-sidebar, .glass-panel, .glass-control),
 [data-glass="opaque"]:is(.bg-card, .bg-popover, .bg-sidebar, .glass-panel, .glass-control) {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 @media (prefers-reduced-transparency: reduce) {
-  :root {
+  :root,
+  .dark {
     --primary-solid: 100%;
+    --glass-blur: none;
+    --glass-blur-control: none;
   }
   .bg-card,
   .bg-popover,
