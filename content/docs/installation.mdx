@@ -31,6 +31,8 @@ Then import it after Tailwind and shadcn's stylesheet, and delete the `:root` an
 @import "./solid-glass.css";
 ```
 
+The import above assumes the installed stylesheet is beside `src/index.css`. Check the path printed by the command and adjust the relative import if your main stylesheet lives elsewhere.
+
 Dark is the material as designed. It follows the `dark` class on `<html>`. A project made by `shadcn init` has a `ThemeProvider` that sets that class from the system's setting; to start in dark whatever the system says:
 
 ```tsx title="src/main.tsx"
@@ -58,6 +60,30 @@ Solid Glass's own components are installed with the same command, from the repos
 ```bash
 npx shadcn@latest add deeplethe/solid-glass/status-glyph
 ```
+
+## Self-hosted registries
+
+Build this repository with a matching full site URL and base path:
+
+```bash
+# Domain root
+SOLID_GLASS_ORIGIN=https://design.example.com SOLID_GLASS_BASE=/ npm run build
+
+# Deployment subpath
+SOLID_GLASS_ORIGIN=https://example.com/design SOLID_GLASS_BASE=/design/ npm run build
+```
+
+`SOLID_GLASS_ORIGIN` includes the subpath and has no trailing slash; `SOLID_GLASS_BASE` is its path with leading and trailing slashes. Both are build-time settings. Serve `dist/` at that location, with a fallback to its `index.html` for client routes. Rebuild when either changes; server environment variables cannot update already-built files.
+
+Install from that registry by its URL:
+
+```bash
+npx shadcn@latest add https://example.com/design/r/status-glyph.json
+```
+
+Solid Glass's own dependencies in the served JSON files use the configured site URL. Installing by `deeplethe/solid-glass/<item>` still reads the source registry in GitHub.
+
+Stock components such as `button` and `kbd` still come from shadcn/ui, and packages from npm or your configured mirror. Offline installations need those sources prepared too.
 
 ## Fonts
 

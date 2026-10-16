@@ -142,9 +142,10 @@ per file, whatever is added to the link, and a browser keeps what it fetched fro
 `?q=button,card` to show some of them, `?theme=light`, `?hover=<selector>` to show what matches as
 if the pointer were on it, and `?click=<selector>` to press something and look at what it opens.
 
-`SOLID_GLASS_ORIGIN` is the address the site is served from (Solid Glass's own components name one
-another by it) and `SOLID_GLASS_BASE` the path it lives under there; the defaults are this
-repository's GitHub Pages.
+`SOLID_GLASS_ORIGIN` defaults to `https://deeplethe.github.io/solid-glass` and
+`SOLID_GLASS_BASE` to `/`; the Pages workflow sets both explicitly. See the
+[installation page](https://deeplethe.github.io/solid-glass/docs/installation#self-hosted-registries)
+for self-hosting.
 
 ## Add a component of Solid Glass's own
 
