@@ -136,7 +136,9 @@ function StepGroup({
   const [open, setOpen] = React.useState(defaultOpen)
   const stats = totalStats(steps)
 
-  if (steps.length === 1 && !running) return <StepRow step={steps[0]} labels={labels} />
+  // Finishing the same call must not close its details or remove its focused
+  // button. A different call starts closed instead of inheriting that state.
+  if (steps.length === 1) return <StepRow key={steps[0].id} step={steps[0]} labels={labels} />
 
   return (
     <div data-slot="step-group" className="flex flex-col gap-1.5">

@@ -1,3 +1,8 @@
+"use client"
+
+import * as React from "react"
+
+import { Button } from "@/components/ui/button"
 import { StepGroup, type Step } from "@/components/ui/tool-steps"
 
 const PATCH = `@@ -12,7 +12,9 @@
@@ -16,9 +21,36 @@ const steps: Step[] = [
 ]
 
 export default function ToolStepsDemo() {
+  const [status, setStatus] = React.useState<Step["status"]>("running")
+  const timer = React.useRef(0)
+  React.useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const finish = (next: "done" | "error") => {
+    window.clearTimeout(timer.current)
+    setStatus("running")
+    timer.current = window.setTimeout(() => setStatus(next), 2000)
+  }
+  const single: Step = {
+    id: "single-run",
+    label: status === "running" ? "Running python research.py" : "Ran python research.py",
+    status,
+    detail: "python research.py",
+    detailLabel: "Command",
+    output: status === "running" ? "Checking sources…" : "3 sources checked",
+    error: status === "error" ? "One source could not be reached" : undefined,
+  }
+
   return (
-    <div className="w-full max-w-md">
+    <div className="flex w-full max-w-md flex-col gap-4">
       <StepGroup steps={steps} />
+      <div className="flex flex-col gap-2">
+        <p className="text-xs text-muted-foreground">Schedule a result, then open the call while it runs.</p>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => finish("done")}>Finish after 2s</Button>
+          <Button variant="outline" size="sm" onClick={() => finish("error")}>Fail after 2s</Button>
+        </div>
+        <StepGroup steps={[single]} />
+      </div>
     </div>
   )
 }
